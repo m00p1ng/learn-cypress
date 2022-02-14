@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
-import HomePage from '../pageObjects/HomePage'
-import ProductPage from '../pageObjects/ProductPage'
+import HomePage from '../../support/pageObjects/HomePage'
+import ProductPage from '../../support/pageObjects/ProductPage'
 
 describe('My Eighth Test Suite', () => {
   let data
@@ -14,7 +14,7 @@ describe('My Eighth Test Suite', () => {
     const homePage = new HomePage()
     const productPage = new ProductPage()
 
-    cy.visit('https://rahulshettyacademy.com/angularpractice/')
+    cy.visit(Cypress.env('url'))
 
     homePage.getEditBox().type(data.name)
     homePage.getGender().select(data.gender)
@@ -36,9 +36,17 @@ describe('My Eighth Test Suite', () => {
       let res = amount.split(' ')
       res = parseFloat(res[1].trim())
       sum = sum + res
+    }).then(() => {
+      cy.log(sum)
     })
-    cy.log(sum)
 
+    cy.get('h3 strong').then((element) => {
+      const amount = element.text()
+      let res = amount.split(' ')
+      let total = parseFloat(res[1].trim())
+
+      expect(sum).to.equal(total)
+    })
 
     cy.contains('Checkout').click()
     cy.get('#country').type('India')
@@ -54,4 +62,3 @@ describe('My Eighth Test Suite', () => {
     })
   })
 })
-
